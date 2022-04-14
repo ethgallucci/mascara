@@ -5,6 +5,9 @@ use crate::interface::{DefaultPkg, Packages, FallbackPkg, Config, ConfigStatus};
 use std::process::Command;
 use std::collections::HashMap;
 
+pub type DMAP = Vec<DefaultPkg>;
+pub type TMAP = Vec<String>;
+
 /// Generic Install Errors
 #[derive(Debug, PartialEq)]
 pub enum InstallErr {
@@ -31,7 +34,35 @@ pub mod light_install {
     pub enum LightErr {
         RunErr,
         SplitErr,
-    } 
+    }
+
+    /// Collect DefaultPkgs with no cfg
+    pub fn collect_no_cfg_defaults(defmap: HashMap<String, DefaultPkg>) -> Result<TMAP, LightErr> {
+        let all_keys = defmap.keys();
+        let mut no_cfg_keys = vec![];
+
+        for key in all_keys {
+            // Get DefaultPkg
+            let v = defmap.get_key_value(key).unwrap().1;
+            // Check if cfg is empty
+            if v.cfg.is_none() { no_cfg_keys.push(key.clone()) }
+            else {}
+        }
+
+        if no_cfg_keys.is_empty() { Err(LightErr::SplitErr) }
+        else { Ok(no_cfg_keys) }
+    }
+
+    pub fn exec_light_install_for_debian(target_map: TMAP) -> Result<(), LightErr> {
+        for target in target_map {
+            let proc = Command::new("sudo")
+                .args(["apt-get", "install", target.as_str()])
+                .output();
+            if proc.is_ok() { spark_tools::logproc(proc.unwrap()) }
+        }
+        Ok(())
+    }
+
 }
 
 /// Full Install

@@ -38,21 +38,21 @@ mod test {
 
     #[test]
     fn can_deser_manifest() {
-        let m = Mascara{
+        let m = Mascara {
             feature: Some(String::from("Debian")),
             fallbacks: None,
         };
-       
-        let def = DefaultPkg {
-            cfg: None
-        };
+
+        let def = DefaultPkg { cfg: None };
 
         let def1 = DefaultPkg {
-            cfg: Some(Config { 
-                after: Some(Cmd { bin: "git".to_string(), 
-                args: Some(vec!["--version".to_string()]) }), 
-            into: None 
-            })
+            cfg: Some(Config {
+                after: Some(Cmd {
+                    bin: "git".to_string(),
+                    args: Some(vec!["--version".to_string()]),
+                }),
+                into: None,
+            }),
         };
 
         let mut map = HashMap::new();
@@ -60,7 +60,7 @@ mod test {
         map.insert("git".to_string(), def1);
 
         let p = Packages {
-            defaults: map, 
+            defaults: map,
             fallbacks: None,
         };
 
@@ -76,7 +76,8 @@ mod test {
     #[test]
     fn can_ser_manifest() {
         // Read manifest
-        let mascara_manifest = std::fs::read_to_string("./mascara.toml").expect("failed to read macara.toml");
+        let mascara_manifest =
+            std::fs::read_to_string("./mascara.toml").expect("failed to read macara.toml");
         let raw = format!(r"{mascara_manifest}");
         let manifest: Manifest = toml::from_str(raw.as_str()).unwrap();
         println!("Serialized Manifest: {:?}", manifest)
@@ -86,5 +87,20 @@ mod test {
     fn can_read_header() {
         let mascara_env: Mascara = toml_tools::header_read();
         println!("{:?}", mascara_env)
+    }
+
+    #[test]
+    fn execute_light_install_for_debian() {
+        let mascara = std::fs::read_to_string("./mascara.toml").expect("failed to read");
+        let raw = format!(r"{mascara}");
+        let manifest: Manifest = toml::from_str(raw.as_str()).unwrap();
+        println!(
+            "Executing light install for debian with this serialization of mascara.toml\n{:?}",
+            manifest
+        );
+
+        let target_map: mascara::TMAP =
+            mascara::light_install::collect_no_cfg_defaults(manifest.packages.defaults).unwrap();
+        mascara::light_install::exec_light_install_for_debian(target_map).unwrap()
     }
 }
