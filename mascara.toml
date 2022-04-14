@@ -4,6 +4,7 @@ feature = "Debian"
 [packages.defaults.curl]
 [packages.defaults.cmake]
 [packages.defaults.neovim]
+cfg.after = { bin = "sudo", args = ["add-apt-repository", "ppa:neovim-ppa/stable"] 
 
 [packages.defaults.git]
 cfg.after = { bin = "git", args = ["--version"] }
