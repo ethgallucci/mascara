@@ -1,0 +1,18 @@
+[mascara]
+feature = "Debian"
+
+[packages.defaults.curl]
+[packages.defaults.cmake]
+[packages.defaults.neovim]
+
+[packages.defaults.git]
+cfg.after = { bin = "git", args = ["--version"] }
+
+[packages.defaults.zsh]
+cfg.after = { bin = "git", args = ["clone", "me/dotfiles", "&&", "cp", "dotfiles/.zshrc", ".zshrc"] }
+
+[packages.fallbacks.rust]
+cfg.after = { bin = "cargo", args = ["install", "exa"] }
+fallback = "curl"
+cmd = { bin = "curl", args = ["--proto", "'=https'", "--tlsv1.2", "-sSf", "https://sh.rustup.rs", "|", "sh"] }
+

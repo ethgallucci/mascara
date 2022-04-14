@@ -1,0 +1,18 @@
+[package]
+authors = ["Ethan Gallucci"]
+edition = "2021"
+name = "lighter"
+version = "0.1.0"
+[[bin]]
+bench = true
+name = "lighter"
+path = "src/lighter.rs"
+test = true
+
+[dependencies]
+toml = "0.5.8"
+
+[dependencies.serde]
+default-features = false
+features = ["derive"]
+version = "1.0.125"
