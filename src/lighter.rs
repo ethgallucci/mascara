@@ -74,6 +74,17 @@ mod test {
     }
 
     #[test]
+    fn can_discern_feature() {
+        let m = Mascara {
+            feature: Some(String::from("Debian")),
+            fallbacks: None,
+        };
+        let feature: mascara::mascara_util::Feature =
+            mascara::mascara_util::discern_feature(m).unwrap();
+        println!("\n\n=========Feature========\n\n {:?}\n\n", feature)
+    }
+
+    #[test]
     fn can_ser_manifest() {
         // Read manifest
         let mascara_manifest =
@@ -102,5 +113,18 @@ mod test {
         let target_map: mascara::TMAP =
             mascara::light_install::collect_no_cfg_defaults(manifest.packages.defaults).unwrap();
         mascara::light_install::exec_light_install_for_debian(target_map).unwrap()
+    }
+
+    #[test]
+    fn can_perform_default_with_cfg_for_debian() {
+        use mascara::*;
+
+        let mm: Manifest = mascara_util::serialize_mascara_manifest().unwrap();
+
+        let def_map: DMAP = mascara_util::build_heavy_dmap(mm.packages.defaults.clone()).unwrap();
+        let target_map: TMAP =
+            mascara_util::build_heavy_tmap_default(mm.packages.defaults).unwrap();
+
+        heavy_install::handle_feature_for_default(mm.mascara, def_map, target_map).unwrap();
     }
 }
