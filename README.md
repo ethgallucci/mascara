@@ -6,3 +6,27 @@ An experimental package manager/config initializer tool for system hoppers.
 
 * 0.0.8-pre_release
     * Initial Release
+
+## mascara.toml
+```toml
+[mascara]
+feature = "Debian"
+logs = { stdout = "blue", stderr = "red" }
+
+[packages.defaults.curl]
+[packages.defaults.cmake]
+
+[packages.defaults.neovim]
+cfg.after = { bin = "sudo", args = ["add-apt-repository", "ppa:neovim-ppa/stable"] }
+
+[packages.defaults.git]
+cfg.after = { bin = "git", args = ["--version"] }
+
+[packages.defaults.zsh]
+cfg.after = { bin = "git", args = ["clone", "me/dotfiles", "&&", "cp", "dotfiles/.zshrc", ".zshrc"] }
+
+[packages.fallbacks.rust]
+cfg.after = { bin = "cargo", args = ["install", "exa"] }
+fallback = "curl"
+cmd = { bin = "curl", args = ["--proto", "'=https'", "--tlsv1.2", "-sSf", "https://sh.rustup.rs", "|", "sh"] }
+```
