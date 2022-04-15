@@ -13,6 +13,7 @@ use crate::bindings::{CliCommand, Flag};
 pub struct Mascara {
     pub feature: Option<String>,        // feature = "Debian"
     pub fallbacks: Option<Vec<String>>, // fallbacks = ["curl", "sh"]
+    pub logs: Option<LogFeatures>,
 }
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
@@ -52,6 +53,12 @@ pub enum ConfigStatus {
     HasAfterNoInto { after: Cmd },
     HasIntoNoAfter { into: String },
     HasBothIntoAfter { into: String, after: Cmd },
+}
+
+#[derive(Debug, Deserialize, Clone, PartialEq, Serialize)]
+pub struct LogFeatures {
+    stdout: String,
+    stderr: String
 }
 
 impl From<Config> for ConfigStatus {

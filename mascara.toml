@@ -1,5 +1,6 @@
 [mascara]
 feature = "Debian"
+logs = { stdout = "blue", stderr = "red" }
 
 [packages.defaults.curl]
 [packages.defaults.cmake]

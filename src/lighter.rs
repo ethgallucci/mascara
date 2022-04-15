@@ -44,6 +44,7 @@ mod test {
         let m = Mascara {
             feature: Some(String::from("Debian")),
             fallbacks: None,
+            log_features: None,
         };
 
         let deser = toml::to_string(&m).unwrap();
@@ -56,6 +57,7 @@ mod test {
         let m = Mascara {
             feature: Some(String::from("Debian")),
             fallbacks: None,
+            log_features: None
         };
 
         let def = DefaultPkg { cfg: None };
@@ -93,6 +95,7 @@ mod test {
         let m = Mascara {
             feature: Some(String::from("Debian")),
             fallbacks: None,
+            log_features: None
         };
         let feature: mascara::mascara_util::Feature =
             mascara::mascara_util::discern_feature(m).unwrap();

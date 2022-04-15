@@ -7,6 +7,8 @@ use crate::interface::{
 use std::collections::HashMap;
 use std::process::Command;
 
+use colored::Colorize;
+
 pub type DMAP = Vec<DefaultPkg>;
 pub type TMAP = Vec<String>;
 
@@ -39,10 +41,13 @@ pub mod mascara_util {
     }
 
     pub fn logproc(proc: std::process::Output) -> () {
-        println!("{}", String::from_utf8_lossy(&proc.stdout));
         if !proc.stderr.is_empty() {
-            println!("stderr: {}", String::from_utf8_lossy(&proc.stderr));
+            let err = format!("ERR: {}", String::from_utf8_lossy(&proc.stderr)).red();
+            println!("{}", err)
         }
+
+        let output = format!("{}", String::from_utf8_lossy(&proc.stdout)).bold().blue();
+        println!("{}", output)
     }
 
     #[derive(Debug, Clone, PartialEq)]
