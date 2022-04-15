@@ -12,7 +12,7 @@ use crate::bindings::{CliCommand, Flag};
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
 pub struct Mascara {
     pub feature: Option<String>,        // feature = "Debian"
-    pub fallbacks: Option<Vec<String>>  // fallbacks = ["curl", "sh"]
+    pub fallbacks: Option<Vec<String>>, // fallbacks = ["curl", "sh"]
 }
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
@@ -35,8 +35,8 @@ pub struct Packages {
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
 pub struct Manifest {
-   pub mascara: Mascara,
-   pub packages: Packages,
+    pub mascara: Mascara,
+    pub packages: Packages,
 }
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
@@ -90,7 +90,7 @@ impl Cmd {
     pub fn collect(self) -> Vec<String> {
         assert!(self.args.is_some());
         self.args.unwrap().clone()
-    } 
+    }
 }
 
 impl From<Flag> for Cmd {
@@ -123,7 +123,8 @@ pub mod toml_tools {
 
     pub fn header_read() -> Mascara {
         // Reading lighter.toml
-        let lighter = fs::read_to_string("./mascara.toml").expect("failed to read lighter.toml file");
+        let lighter =
+            fs::read_to_string("./mascara.toml").expect("failed to read lighter.toml file");
         let raw = format!(r"{lighter}");
         let build: Mascara = toml::from_str(raw.as_str()).unwrap();
         build

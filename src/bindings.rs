@@ -82,4 +82,3 @@ pub fn into_cmd_with_flags(args: Vec<String>) -> CliCommand {
         CliCommand::Unknown
     }
 }
-

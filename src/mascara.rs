@@ -199,14 +199,14 @@ pub mod heavy_install {
                 let curr_after = curr_cfg.after.unwrap();
                 let curr_args = curr_after.args.unwrap();
 
-                 // Try CFG
+                // Try CFG
                 let try_cfg_after = Command::new(curr_after.bin)
                     .args(curr_args.iter().map(|a| a.as_str()))
                     .output()
                     .expect("failed at cfg_after");
                 mascara_util::logproc(try_cfg_after);
             }
-            
+
             i += 1;
         }
         Ok(HeavySuccess {})

@@ -16,6 +16,21 @@ mod mascara;
 fn main() {
     let args: Vec<String> = env::args().collect();
     let clicmd: CliCommand = into_cmd_with_flags(args);
+    if clicmd == CliCommand::Spark {
+        use mascara::*;
+
+        // Parse mascara.toml
+        let mm: Manifest = mascara_util::serialize_mascara_manifest().unwrap();
+
+        // Builds a Vec<DefaultPkg>
+        let def_map: DMAP = mascara_util::build_heavy_dmap(mm.packages.defaults.clone()).unwrap();
+        // Builds a Vec<String>
+        let target_map: TMAP =
+            mascara_util::build_heavy_tmap_default(mm.packages.defaults).unwrap();
+
+        // Parses feature field in manifest mascara section, passes it to appropiate handler
+        heavy_install::handle_feature_for_default(mm.mascara, def_map, target_map).unwrap();
+    }
     println!("Parsed cli arguments & flags\n{:?}\n", clicmd.clone());
 }
 
@@ -115,16 +130,21 @@ mod test {
         mascara::light_install::exec_light_install_for_debian(target_map).unwrap()
     }
 
+    // Milestone
     #[test]
     fn can_perform_default_with_cfg_for_debian() {
         use mascara::*;
 
+        // Parses 'mascara.toml' into a Manifest object
         let mm: Manifest = mascara_util::serialize_mascara_manifest().unwrap();
 
+        // Builds a Vec<DefaultPkg>
         let def_map: DMAP = mascara_util::build_heavy_dmap(mm.packages.defaults.clone()).unwrap();
+        // Builds a Vec<String>
         let target_map: TMAP =
             mascara_util::build_heavy_tmap_default(mm.packages.defaults).unwrap();
 
+        // Parses feature field in manifest mascara section, passes it to appropiate handler
         heavy_install::handle_feature_for_default(mm.mascara, def_map, target_map).unwrap();
     }
 }
