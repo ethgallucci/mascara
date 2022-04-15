@@ -1,8 +1,9 @@
 [package]
 authors = ["Ethan Gallucci"]
 edition = "2021"
-name = "lighter"
+name = "mascara"
 version = "0.1.0"
+
 [[bin]]
 bench = true
 name = "lighter"
