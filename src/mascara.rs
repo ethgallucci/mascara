@@ -25,20 +25,12 @@ pub mod mascara_util {
     use super::*;
 
     pub fn build_heavy_dmap(defpkgs: HashMap<String, DefaultPkg>) -> Result<DMAP, ParseErr> {
-        let mut dmap = vec![];
-        for pkg in defpkgs.values() {
-            dmap.push(pkg.clone())
-        }
-        Ok(dmap)
+        Ok(defpkgs.values().map(|p| p.clone()).collect::<Vec<DefaultPkg>>())
     }
 
-    pub fn build_heavy_tmap_default(dpkgs: HashMap<String, DefaultPkg>) -> Result<TMAP, ParseErr> {
-        let mut tmap = vec![];
-        for target in dpkgs.keys() {
-            tmap.push(target.clone())
+    pub fn build_heavy_tmap_default(defpkgs: HashMap<String, DefaultPkg>) -> Result<TMAP, ParseErr> {
+            Ok(defpkgs.keys().map(|k| k.clone()).collect::<Vec<String>>())
         }
-        Ok(tmap)
-    }
 
     pub fn logproc(proc: std::process::Output) -> () {
         if !proc.stderr.is_empty() {

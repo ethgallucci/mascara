@@ -119,6 +119,16 @@ mod test {
     }
 
     #[test]
+    fn can_build_heavy_dmap() {
+        use mascara::{DMAP, mascara_util};
+
+        let manifest: Manifest = mascara_util::serialize_mascara_manifest().unwrap();
+        let defpkgs = manifest.packages.defaults;
+        let defpkg_map: DMAP = mascara_util::build_heavy_dmap(defpkgs).unwrap(); 
+        println!("DMAP: {:?}", defpkg_map)
+    }
+
+    #[test]
     fn execute_light_install_for_debian() {
         let mascara = std::fs::read_to_string("./mascara.toml").expect("failed to read");
         let raw = format!(r"{mascara}");
