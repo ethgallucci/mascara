@@ -8,6 +8,7 @@ use std::convert::From;
 use std::fs;
 
 use crate::bindings::{CliCommand, Flag};
+use crate::mascara::heavy_install::fallback;
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
 pub struct Mascara {
@@ -22,16 +23,9 @@ pub struct DefaultPkg {
 }
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
-pub struct FallbackPkg {
-    pub cfg: Option<Config>,
-    pub fallback: String,
-    pub cmd: Cmd,
-}
-
-#[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
 pub struct Packages {
     pub defaults: HashMap<String, DefaultPkg>,
-    pub fallbacks: Option<HashMap<String, FallbackPkg>>,
+    pub fallbacks: Option<HashMap<String, fallback::FallbackPkg>>,
 }
 
 #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]

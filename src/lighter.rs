@@ -29,7 +29,12 @@ fn main() {
             mascara_util::build_heavy_tmap_default(mm.packages.defaults).unwrap();
 
         // Parses feature field in manifest mascara section, passes it to appropiate handler
-        heavy_install::handle_feature_for_default(mm.mascara, def_map, target_map).unwrap();
+        //        heavy_install::handle_feature_for_default(mm.mascara, def_map, target_map).unwrap();
+        use heavy_install::fallback;
+
+        let fmap: fallback::FMAP =
+            fallback::build_fmap(mm.packages.fallbacks.unwrap().clone()).unwrap();
+        fallback::try_fallback(fmap);
     }
     println!("Parsed cli arguments & flags\n{:?}\n", clicmd.clone());
 }
@@ -120,11 +125,11 @@ mod test {
 
     #[test]
     fn can_build_heavy_dmap() {
-        use mascara::{DMAP, mascara_util};
+        use mascara::{mascara_util, DMAP};
 
         let manifest: Manifest = mascara_util::serialize_mascara_manifest().unwrap();
         let defpkgs = manifest.packages.defaults;
-        let defpkg_map: DMAP = mascara_util::build_heavy_dmap(defpkgs).unwrap(); 
+        let defpkg_map: DMAP = mascara_util::build_heavy_dmap(defpkgs).unwrap();
         println!("DMAP: {:?}", defpkg_map)
     }
 
@@ -159,5 +164,17 @@ mod test {
 
         // Parses feature field in manifest mascara section, passes it to appropiate handler
         heavy_install::handle_feature_for_default(mm.mascara, def_map, target_map).unwrap();
+    }
+
+    #[test]
+    fn can_perform_fallback() {
+        use heavy_install::fallback;
+        use mascara::*;
+
+        let mm: Manifest = mascara_util::serialize_mascara_manifest().unwrap();
+        let fallbacks = mm.packages.fallbacks.unwrap().clone();
+        let fmap: fallback::FMAP = fallback::build_fmap(fallbacks).unwrap();
+
+        fallback::try_fallback(fmap)
     }
 }

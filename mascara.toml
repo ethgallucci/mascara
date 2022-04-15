@@ -17,5 +17,3 @@ cfg.after = { bin = "git", args = ["clone", "me/dotfiles", "&&", "cp", "dotfiles
 [packages.fallbacks.rust]
 cfg.after = { bin = "cargo", args = ["install", "exa"] }
 fallback = "curl"
-cmd = { bin = "curl", args = ["--proto", "'=https'", "--tlsv1.2", "-sSf", "https://sh.rustup.rs", "|", "sh"] }
-

@@ -1,9 +1,7 @@
 #![warn(unused_crate_dependencies)]
 #![allow(dead_code, unused_variables, unused_assignments)]
 
-use crate::interface::{
-    Cmd, Config, ConfigStatus, DefaultPkg, FallbackPkg, Manifest, Mascara, Packages,
-};
+use crate::interface::{Cmd, Config, ConfigStatus, DefaultPkg, Manifest, Mascara, Packages};
 use std::collections::HashMap;
 use std::process::Command;
 
@@ -25,16 +23,21 @@ pub mod mascara_util {
     use super::*;
 
     pub fn build_heavy_dmap(defpkgs: HashMap<String, DefaultPkg>) -> Result<DMAP, ParseErr> {
-        Ok(defpkgs.values().map(|p| p.clone()).collect::<Vec<DefaultPkg>>())
+        Ok(defpkgs
+            .values()
+            .map(|p| p.clone())
+            .collect::<Vec<DefaultPkg>>())
     }
 
-    pub fn build_heavy_tmap_default(defpkgs: HashMap<String, DefaultPkg>) -> Result<TMAP, ParseErr> {
-            Ok(defpkgs.keys().map(|k| k.clone()).collect::<Vec<String>>())
-        }
+    pub fn build_heavy_tmap_default(
+        defpkgs: HashMap<String, DefaultPkg>,
+    ) -> Result<TMAP, ParseErr> {
+        Ok(defpkgs.keys().map(|k| k.clone()).collect::<Vec<String>>())
+    }
 
     pub fn logproc(proc: std::process::Output) -> () {
         if !proc.stderr.is_empty() {
-            let err = format!("ERR: {}", String::from_utf8_lossy(&proc.stderr)).red();
+            let err = format!("ERR: {}", String::from_utf8_lossy(&proc.stderr),).red();
             println!("{}", err)
         }
 
@@ -209,5 +212,63 @@ pub mod heavy_install {
             i += 1;
         }
         Ok(HeavySuccess {})
+    }
+
+    pub mod fallback {
+        use super::*;
+
+        use serde::{Deserialize, Serialize};
+
+        pub type FMAP = Vec<FallbackPkg>;
+
+        #[derive(Debug, Clone, Deserialize, PartialEq, Serialize)]
+        pub struct FallbackPkg {
+            pub cfg: Option<Config>,
+            pub fallback: String,
+            pub cmd: Cmd,
+        }
+
+        impl FallbackPkg {
+            pub fn deconstruct(&self) -> (String, Vec<String>) {
+                let bin = self.fallback.clone();
+                let args = self
+                    .cmd
+                    .clone()
+                    .args.unwrap();
+                (bin, args)
+            }
+        }
+
+        pub fn build_fmap(fpkgs: HashMap<String, FallbackPkg>) -> Result<FMAP, ()> {
+            Ok(fpkgs
+                .values()
+                .map(|f| f.clone())
+                .collect::<Vec<FallbackPkg>>())
+        }
+
+        pub fn try_fallback(fmap: FMAP) -> () {
+            let mut i = 0;
+            while (i < fmap.len()) {
+                let curr_fback = fmap[i].clone();
+                let (bin, mut args) = curr_fback.deconstruct();
+                args.remove(0);
+
+                println!(
+                    "{:?}",
+                    args.clone()
+                        .iter()
+                        .map(|a| a.as_str())
+                        .collect::<Vec<&str>>()
+                );
+
+                let trying_fallback = Command::new(bin)
+                    .args(args.iter().map(|a| a.as_str()).collect::<Vec<&str>>())
+                    .output()
+                    .expect("failed at trying_fallback");
+                mascara_util::logproc(trying_fallback);
+
+                i += 1;
+            }
+        }
     }
 }
