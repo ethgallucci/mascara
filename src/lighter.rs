@@ -57,7 +57,7 @@ mod test {
         let m = Mascara {
             feature: Some(String::from("Debian")),
             fallbacks: None,
-            logs: None
+            logs: None,
         };
 
         let def = DefaultPkg { cfg: None };
@@ -95,7 +95,7 @@ mod test {
         let m = Mascara {
             feature: Some(String::from("Debian")),
             fallbacks: None,
-            logs: None
+            logs: None,
         };
         let feature: mascara::mascara_util::Feature =
             mascara::mascara_util::discern_feature(m).unwrap();

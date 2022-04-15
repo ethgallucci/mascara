@@ -58,7 +58,7 @@ pub enum ConfigStatus {
 #[derive(Debug, Deserialize, Clone, PartialEq, Serialize)]
 pub struct LogFeatures {
     stdout: String,
-    stderr: String
+    stderr: String,
 }
 
 impl From<Config> for ConfigStatus {

@@ -1,5 +1,5 @@
 #![warn(unused_crate_dependencies)]
-#![allow(dead_code, unused_variables)]
+#![allow(dead_code, unused_variables, unused_assignments)]
 
 use crate::interface::{
     Cmd, Config, ConfigStatus, DefaultPkg, FallbackPkg, Manifest, Mascara, Packages,
@@ -46,7 +46,9 @@ pub mod mascara_util {
             println!("{}", err)
         }
 
-        let output = format!("{}", String::from_utf8_lossy(&proc.stdout)).bold().blue();
+        let output = format!("{}", String::from_utf8_lossy(&proc.stdout))
+            .bold()
+            .blue();
         println!("{}", output)
     }
 
