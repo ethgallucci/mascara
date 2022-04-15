@@ -16,7 +16,7 @@ pub type TMAP = Vec<String>;
 #[derive(Debug, PartialEq)]
 pub enum InstallErr {
     CmdEmpty,
-    CmdTerminated { cmd: crate::interface::Cmd },
+    CmdTerminated { cmd: Cmd },
     PackEmpty,
 }
 
