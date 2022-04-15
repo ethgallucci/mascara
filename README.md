@@ -2,11 +2,6 @@
 
 An experimental package manager/config initializer tool for system hoppers.
 
-## Version History
-
-* 0.0.8-pre_release
-    * Initial Release
-
 ## mascara.toml
 ```toml
 [mascara]
@@ -26,7 +21,12 @@ cfg.after = { bin = "git", args = ["--version"] }
 cfg.after = { bin = "git", args = ["clone", "me/dotfiles", "&&", "cp", "dotfiles/.zshrc", ".zshrc"] }
 
 [packages.fallbacks.rust]
-cfg.after = { bin = "cargo", args = ["install", "exa"] }
 fallback = "curl"
 cmd = { bin = "curl", args = ["--proto", "'=https'", "--tlsv1.2", "-sSf", "https://sh.rustup.rs", "|", "sh"] }
+cfg.after = { bin = "cargo", args = ["install", "exa"] }
 ```
+
+## Version History
+
+* 0.0.8-pre_release
+    * Initial Release
